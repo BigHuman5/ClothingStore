@@ -2,6 +2,9 @@
 
 namespace ClothingStore.DAL.Entities
 {
+    /// <summary>
+    /// Таблица со списком названий компаний (Брэндов)
+    /// </summary>
      public class Brands : Base
     {
 

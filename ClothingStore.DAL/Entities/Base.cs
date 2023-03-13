@@ -2,6 +2,9 @@
 
 namespace ClothingStore.DAL.Entities
 {
+    /// <summary>
+    /// Базовый класс который будет наследоваться всем остальным.
+    /// </summary>
     public class Base
     {
         [Key]
