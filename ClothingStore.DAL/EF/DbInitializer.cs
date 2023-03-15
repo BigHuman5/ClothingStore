@@ -12,10 +12,16 @@ namespace ClothingStore.DAL.EF
             this.context = context;
             Brands();
             Colors();
-            Types();
+            Category();
             TypesHuman();
 
-            TypesDimensions();
+            UnionCategoryAndTypeHuman();
+
+            Subcategory();
+
+            Collections();
+            Cards();
+
 
             NamesDimensions();
             NamesCriteriaOfDimensions();
@@ -28,6 +34,8 @@ namespace ClothingStore.DAL.EF
             CriteriaOfDimensions();
 
             Dimensions();
+
+            Products();
         }
 
         private void Brands()
@@ -41,18 +49,18 @@ namespace ClothingStore.DAL.EF
             var group = new Brands[]
             {
                 new Brands {
-                    Name="Nike"
+                    Name="Название брэнда #1"
                 },
                 new Brands {
-                    Name="Abibas",
+                    Name="Название брэнда #2",
                     isDeleted=false,
                 },
                 new Brands {
-                    Name="O`stin",
+                    Name="Название брэнда #3",
                     isDeleted=false,
                 },
                 new Brands {
-                    Name="Like",
+                    Name="Название брэнда #4",
                     isDeleted=true,
                 },
             };
@@ -63,7 +71,6 @@ namespace ClothingStore.DAL.EF
             }
             context.SaveChanges();
         }
-
         private void Colors()
         {
             if (context.Colors.Any())
@@ -100,40 +107,160 @@ namespace ClothingStore.DAL.EF
             }
             context.SaveChanges();
         }
-
-        private void Types()
+        private void Category()
         {
-            if (context.Types.Any())
+            if (context.Category.Any())
             {
                 return;
             }
 
-            var group = new Types[]
+            var group = new Category[]
            {
-                new Types{
+                new Category{
                     Name="Футболки",
                 },
-                new Types{
+                new Category{
                     Name="Джинсы",
                     isDeleted=false,
                 },
-                new Types{
+                new Category{
                     Name="Платья",
                     isDeleted=false,
                 },
-                new Types{
+                new Category{
                     Name="Носки",
                     isDeleted=true,
                 },
            };
 
-            foreach (Types s in group)
+            foreach (Category s in group)
             {
-                context.Types.Add(s);
+                context.Category.Add(s);
+            }
+            context.SaveChanges();
+        }
+        private void Subcategory()
+        {
+            if (context.Subcategories.Any())
+            {
+                return;
+            }
+
+            var group = new Subcategory[]
+           {
+                new Subcategory{
+                    Name="Зауженные",
+                    unionCategoryAndTypeHumanId=3,
+                },
+                new Subcategory{
+                    Name="Широкие",
+                    unionCategoryAndTypeHumanId=3,
+                    isDeleted=false,
+                },
+                new Subcategory{
+                    Name="Длинные",
+                    unionCategoryAndTypeHumanId=5,
+                    isDeleted=false,
+                },
+                new Subcategory{
+                    Name="Короткин",
+                    unionCategoryAndTypeHumanId=5,
+                    isDeleted=true,
+                },
+           };
+
+            foreach (Subcategory s in group)
+            {
+                context.Subcategories.Add(s);
+            }
+            context.SaveChanges();
+        }
+        private void Collections()
+        {
+            if (context.Collections.Any())
+            {
+                return;
+            }
+
+            var group = new Collections[]
+           {
+                new Collections{
+                    Name="Зима 2022",
+                },
+                new Collections{
+                    Name="Зима 2023",
+                    isActual=true,
+                    isDeleted=false,
+                },
+                new Collections{
+                    Name="Зима 2010",
+                    isActual=false,
+                    isDeleted=false,
+                },
+                new Collections{
+                    Name="Лето 2022",
+                    isActual=true,
+                    isDeleted=true,
+                },
+           };
+
+            foreach (Collections s in group)
+            {
+                context.Collections.Add(s);
             }
             context.SaveChanges();
         }
 
+        private void Cards()
+        {
+            if (context.Cards.Any())
+            {
+                return;
+            }
+
+            var group = new Cards[]
+           {
+                new Cards{
+                    Name="Название карточки #1",
+                    collectionId=1,
+                    subcategoryId=1,
+                    About="fdff",
+                    fakePopularity=1,
+                    Price=100.5f,
+                    realPopulatiry=2,
+                },
+           };
+
+            foreach (Cards s in group)
+            {
+                context.Cards.Add(s);
+            }
+            context.SaveChanges();
+        }
+        private void Products()
+        {
+            if (context.Products.Any())
+            {
+                return;
+            }
+
+            var group = new Products[]
+           {
+                new Products{
+                    cardId=1,
+                    colorId=1,
+                    howMany=100,
+                    howManyPictures=3,
+                    sizeId=1,
+                },
+           };
+
+            foreach (Products s in group)
+            {
+                context.Products.Add(s);
+            }
+            context.SaveChanges();
+        }
         private void TypesHuman()
         {
             if (context.TypesHumans.Any())
@@ -166,69 +293,67 @@ namespace ClothingStore.DAL.EF
             }
             context.SaveChanges();
         }
-
-        private void TypesDimensions()
+        private void UnionCategoryAndTypeHuman()
         {
-            if (context.TypesDimensions.Any())
+            if (context.UnionCategoryAndTypeHuman.Any())
             {
                 return;
             }
 
-            var group = new TypesDimensions[]
+            var group = new UnionCategoryAndTypeHuman[]
            {
-                new TypesDimensions{ // футболки муж.
-                    typeId=1,
+                new UnionCategoryAndTypeHuman{ // футболки муж.
+                    categoryId=1,
                     typeHumanId=1,
                 },
-                new TypesDimensions{ // футболка жен.
-                    typeId=1,
+                new UnionCategoryAndTypeHuman{ // футболка жен.
+                    categoryId=1,
                     typeHumanId=2,
                     isDeleted=false,
                 },
-                new TypesDimensions{ // джинсы муж.
-                    typeId=2,
+                new UnionCategoryAndTypeHuman{ // джинсы муж.
+                    categoryId=2,
                     typeHumanId=1,
                     isDeleted=false,
                 },
-                new TypesDimensions{ // джинсы жен.
-                    typeId=2,
+                new UnionCategoryAndTypeHuman{ // джинсы жен.
+                    categoryId=2,
                     typeHumanId=2,
                     isDeleted=false,
                 },
-                new TypesDimensions{ // платья жен.
-                    typeId=3,
+                new UnionCategoryAndTypeHuman{ // платья жен.
+                    categoryId=3,
                     typeHumanId=2,
                     isDeleted=false,
                 },
-                new TypesDimensions{ // носки муж.
-                    typeId=4,
+                new UnionCategoryAndTypeHuman{ // носки муж.
+                    categoryId=4,
                     typeHumanId=1,
                     isDeleted=false,
                 },
-                new TypesDimensions{ // джинсы дет.
-                    typeId=2,
+                new UnionCategoryAndTypeHuman{ // джинсы дет.
+                    categoryId=2,
                     typeHumanId=3,
                     isDeleted=false,
                 },
-                new TypesDimensions{ // джинсы бер.(false)
-                    typeId=2,
+                new UnionCategoryAndTypeHuman{ // джинсы бер.(false)
+                    categoryId=2,
                     typeHumanId=4,
                     isDeleted=false,
                 },
-                new TypesDimensions{ // носки дет.
-                    typeId=4,
+                new UnionCategoryAndTypeHuman{ // носки дет.
+                    categoryId=4,
                     typeHumanId=3,
                     isDeleted=true,
                 },
            };
 
-            foreach (TypesDimensions s in group)
+            foreach (UnionCategoryAndTypeHuman s in group)
             {
-                context.TypesDimensions.Add(s);
+                context.UnionCategoryAndTypeHuman.Add(s);
             }
             context.SaveChanges();
         }
-
         private void NamesDimensions()
         {
             if (context.NamesDimensions.Any())
@@ -258,7 +383,6 @@ namespace ClothingStore.DAL.EF
             }
             context.SaveChanges();
         }
-
         private void NamesCriteriaOfDimensions()
         {
             if (context.NamesCriteriaOfDimensions.Any())
@@ -285,10 +409,9 @@ namespace ClothingStore.DAL.EF
             }
             context.SaveChanges();
         }
-
         private void UnionNamesAndDimensions()
         {
-            if (context.NamesDimensions.Any())
+            if (context.UnionNamesAndDimensions.Any())
             {
                 return;
             }
@@ -297,49 +420,49 @@ namespace ClothingStore.DAL.EF
            {
                 new UnionNamesAndDimensions{
                     NamesDimensionsId=1,
-                    typeDimensionsId=1,
+                    UnionCategoryAndTypeHumanId=1,
                 },
                 new UnionNamesAndDimensions{
                     NamesDimensionsId=2,
-                    typeDimensionsId=1,
+                    UnionCategoryAndTypeHumanId=1,
                     isDeleted=false,
                 },
                 new UnionNamesAndDimensions{
                     NamesDimensionsId=3,
-                    typeDimensionsId=1,
+                    UnionCategoryAndTypeHumanId=1,
                     isDeleted=false,
                 },
                 new UnionNamesAndDimensions{
                     NamesDimensionsId=4,
-                    typeDimensionsId=1,
+                    UnionCategoryAndTypeHumanId=1,
                     isDeleted=true,
                 },
                  new UnionNamesAndDimensions{
                     NamesDimensionsId=1,
-                    typeDimensionsId=2,
+                    UnionCategoryAndTypeHumanId=2,
                 },
                 new UnionNamesAndDimensions{
                     NamesDimensionsId=2,
-                    typeDimensionsId=2,
+                    UnionCategoryAndTypeHumanId=2,
                     isDeleted=false,
                 },
                 new UnionNamesAndDimensions{
                     NamesDimensionsId=3,
-                    typeDimensionsId=2,
+                    UnionCategoryAndTypeHumanId=2,
                     isDeleted=false,
                 },
                  new UnionNamesAndDimensions{
                     NamesDimensionsId=1,
-                    typeDimensionsId=3,
+                    UnionCategoryAndTypeHumanId=3,
                 },
                 new UnionNamesAndDimensions{
                     NamesDimensionsId=2,
-                    typeDimensionsId=4,
+                    UnionCategoryAndTypeHumanId=4,
                     isDeleted=false,
                 },
                 new UnionNamesAndDimensions{
                     NamesDimensionsId=3,
-                    typeDimensionsId=3,
+                    UnionCategoryAndTypeHumanId=3,
                     isDeleted=false,
                 },
            };
@@ -350,10 +473,9 @@ namespace ClothingStore.DAL.EF
             }
             context.SaveChanges();
         }
-
         private void UnionNamesCriteriaOfDimensions()
         {
-            if (context.NamesCriteriaOfDimensions.Any())
+            if (context.UnionNamesCriteriaOfDimensions.Any())
             {
                 return;
             }
@@ -362,56 +484,56 @@ namespace ClothingStore.DAL.EF
            {
                 new UnionNamesCriteriaOfDimensions{
                     NamesCriteriaOfDimensionsId=1,
-                    typesDimensionsId=1,
+                    UnionCategoryAndTypeHumanId=1,
                 },
                 new UnionNamesCriteriaOfDimensions{
                     NamesCriteriaOfDimensionsId=1,
-                    typesDimensionsId=2,
+                    UnionCategoryAndTypeHumanId=2,
                     isDeleted=false,
                 },
                 new UnionNamesCriteriaOfDimensions{
                     NamesCriteriaOfDimensionsId=2,
-                    typesDimensionsId=1,
+                    UnionCategoryAndTypeHumanId=1,
                     isDeleted=false,
                 },
                 new UnionNamesCriteriaOfDimensions{
                     NamesCriteriaOfDimensionsId=1,
-                    typesDimensionsId=2,
+                    UnionCategoryAndTypeHumanId=2,
                     isDeleted=false,
                 },
                 new UnionNamesCriteriaOfDimensions{
                     NamesCriteriaOfDimensionsId=1,
-                    typesDimensionsId=3,
+                    UnionCategoryAndTypeHumanId=3,
                     isDeleted=false,
                 },
                 new UnionNamesCriteriaOfDimensions{
                     NamesCriteriaOfDimensionsId=1,
-                    typesDimensionsId=4,
+                    UnionCategoryAndTypeHumanId=4,
                     isDeleted=false,
                 },
                 new UnionNamesCriteriaOfDimensions{
                     NamesCriteriaOfDimensionsId=1,
-                    typesDimensionsId=5,
+                    UnionCategoryAndTypeHumanId=5,
                     isDeleted=false,
                 },
                 new UnionNamesCriteriaOfDimensions{
                     NamesCriteriaOfDimensionsId=2,
-                    typesDimensionsId=5,
+                    UnionCategoryAndTypeHumanId=5,
                     isDeleted=false,
                 },
                 new UnionNamesCriteriaOfDimensions{
                     NamesCriteriaOfDimensionsId=1,
-                    typesDimensionsId=8,
+                    UnionCategoryAndTypeHumanId=8,
                     isDeleted=false,
                 },
                 new UnionNamesCriteriaOfDimensions{
                     NamesCriteriaOfDimensionsId=3,
-                    typesDimensionsId=9,
+                    UnionCategoryAndTypeHumanId=9,
                     isDeleted=false,
                 },
                 new UnionNamesCriteriaOfDimensions{
                     NamesCriteriaOfDimensionsId=3,
-                    typesDimensionsId=8,
+                    UnionCategoryAndTypeHumanId=8,
                     isDeleted=true,
                 },
            };
@@ -422,7 +544,6 @@ namespace ClothingStore.DAL.EF
             }
             context.SaveChanges();
         }
-
         private void Sizes()
         {
             if (context.Sizes.Any())
@@ -456,7 +577,6 @@ namespace ClothingStore.DAL.EF
             }
             context.SaveChanges();
         }
-
         private void CriteriaOfDimensions()
         {
             if (context.CriteriaOfDimensions.Any())
@@ -490,7 +610,6 @@ namespace ClothingStore.DAL.EF
             }
             context.SaveChanges();
         }
-
         private void Dimensions()
         {
             if (context.Dimensions.Any())

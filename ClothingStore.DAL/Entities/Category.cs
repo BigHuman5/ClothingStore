@@ -7,11 +7,12 @@ namespace ClothingStore.DAL.Entities
     /// <summary>
     /// Таблица со списком типов одежды (Футболки, платья....)
     /// </summary>
-    public class Types : Base
+    public class Category : Base
     {
         [Required]
         public string? Name { get; set; } = "";
 
-        public IEnumerable<TypesDimensions>? TypesDimensions { get; set; }
+        public IEnumerable<UnionCategoryAndTypeHuman>? TypesDimensions { get; set; }
+        public IEnumerable<Subcategory>? Subcategory { get; set; }
     }
 }

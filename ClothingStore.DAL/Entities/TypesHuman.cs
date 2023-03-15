@@ -12,6 +12,6 @@ namespace ClothingStore.DAL.Entities
         [Required]
         public string? Name { get; set; } = "";
 
-        public IEnumerable<TypesDimensions>? TypesDimensions { get; set; }
+        public IEnumerable<UnionCategoryAndTypeHuman>? TypesDimensions { get; set; }
     }
 }

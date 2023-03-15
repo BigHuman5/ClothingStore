@@ -13,5 +13,11 @@ namespace ClothingStore.DAL.Entities
         [MinLength(1)]
         public string? Name { get; set; } = null;
 
+        public int fakePopularity { get; set; } = 0;
+
+        public int realPopulatiry { get; set; } = 0;
+
+        public IEnumerable<Cards>? Cards { get; set; }
+
     }
 }

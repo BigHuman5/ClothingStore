@@ -9,8 +9,8 @@ namespace ClothingStore.DAL.Entities.Dimensions
         public NamesDimensions? NamesDimensions { get; set; }
         public int? NamesDimensionsId { get; set; }
 
-        public TypesDimensions? typeDimensions { get; set; } = null;
-        public int? typeDimensionsId { get; set; }
+        public UnionCategoryAndTypeHuman? unionCategoryAndTypeHuman { get; set; } = null;
+        public int? UnionCategoryAndTypeHumanId { get; set; }
 
         public IEnumerable<Dimensions>? dimensions { get; set; }
         public IEnumerable<Sizes>? sizes { get; set; }

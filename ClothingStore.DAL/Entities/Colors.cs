@@ -14,5 +14,7 @@ namespace ClothingStore.DAL.Entities
         [MaxLength(6)]
         [MinLength(3)]
         public string color { get; set; } = "fff";
+
+        public IEnumerable<Products>? Products { get; set; }
     }
 }

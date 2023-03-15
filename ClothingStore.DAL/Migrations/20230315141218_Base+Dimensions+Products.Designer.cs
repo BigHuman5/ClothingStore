@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace ClothingStore.DAL.Migrations
 {
     [DbContext(typeof(ClothingStoreDbContext))]
-    [Migration("20230313155711_Base+Dimensions")]
-    partial class BaseDimensions
+    [Migration("20230315141218_Base+Dimensions+Products")]
+    partial class BaseDimensionsProducts
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -38,12 +38,114 @@ namespace ClothingStore.DAL.Migrations
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
 
+                    b.Property<int>("fakePopularity")
+                        .HasColumnType("int");
+
+                    b.Property<bool>("isDeleted")
+                        .HasColumnType("bit");
+
+                    b.Property<int>("realPopulatiry")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Brands");
+                });
+
+            modelBuilder.Entity("ClothingStore.DAL.Entities.Cards", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("About")
+                        .IsRequired()
+                        .HasMaxLength(500)
+                        .HasColumnType("nvarchar(500)");
+
+                    b.Property<string>("Addition")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<float>("Price")
+                        .HasColumnType("real");
+
+                    b.Property<int?>("brandId")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("collectionId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("fakePopularity")
+                        .HasColumnType("int");
+
+                    b.Property<bool>("isDeleted")
+                        .HasColumnType("bit");
+
+                    b.Property<int>("realPopulatiry")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("subcategoryId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("brandId");
+
+                    b.HasIndex("collectionId");
+
+                    b.HasIndex("subcategoryId");
+
+                    b.ToTable("Cards");
+                });
+
+            modelBuilder.Entity("ClothingStore.DAL.Entities.Category", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<bool>("isDeleted")
                         .HasColumnType("bit");
 
                     b.HasKey("Id");
 
-                    b.ToTable("Brands");
+                    b.ToTable("Category");
+                });
+
+            modelBuilder.Entity("ClothingStore.DAL.Entities.Collections", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("isActual")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("isDeleted")
+                        .HasColumnType("bit");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Collections");
                 });
 
             modelBuilder.Entity("ClothingStore.DAL.Entities.Colors", b =>
@@ -194,7 +296,7 @@ namespace ClothingStore.DAL.Migrations
                     b.ToTable("Sizes");
                 });
 
-            modelBuilder.Entity("ClothingStore.DAL.Entities.Dimensions.TypesDimensions", b =>
+            modelBuilder.Entity("ClothingStore.DAL.Entities.Dimensions.UnionCategoryAndTypeHuman", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -202,22 +304,22 @@ namespace ClothingStore.DAL.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
+                    b.Property<int?>("categoryId")
+                        .HasColumnType("int");
+
                     b.Property<bool>("isDeleted")
                         .HasColumnType("bit");
 
                     b.Property<int?>("typeHumanId")
                         .HasColumnType("int");
 
-                    b.Property<int?>("typeId")
-                        .HasColumnType("int");
-
                     b.HasKey("Id");
+
+                    b.HasIndex("categoryId");
 
                     b.HasIndex("typeHumanId");
 
-                    b.HasIndex("typeId");
-
-                    b.ToTable("TypesDimensions");
+                    b.ToTable("UnionCategoryAndTypeHuman");
                 });
 
             modelBuilder.Entity("ClothingStore.DAL.Entities.Dimensions.UnionNamesAndDimensions", b =>
@@ -231,17 +333,17 @@ namespace ClothingStore.DAL.Migrations
                     b.Property<int?>("NamesDimensionsId")
                         .HasColumnType("int");
 
+                    b.Property<int?>("UnionCategoryAndTypeHumanId")
+                        .HasColumnType("int");
+
                     b.Property<bool>("isDeleted")
                         .HasColumnType("bit");
-
-                    b.Property<int?>("typeDimensionsId")
-                        .HasColumnType("int");
 
                     b.HasKey("Id");
 
                     b.HasIndex("NamesDimensionsId");
 
-                    b.HasIndex("typeDimensionsId");
+                    b.HasIndex("UnionCategoryAndTypeHumanId");
 
                     b.ToTable("UnionNamesAndDimensions");
                 });
@@ -257,28 +359,68 @@ namespace ClothingStore.DAL.Migrations
                     b.Property<int?>("NamesCriteriaOfDimensionsId")
                         .HasColumnType("int");
 
+                    b.Property<int?>("UnionCategoryAndTypeHumanId")
+                        .HasColumnType("int");
+
                     b.Property<bool>("isDeleted")
                         .HasColumnType("bit");
-
-                    b.Property<int?>("typesDimensionsId")
-                        .HasColumnType("int");
 
                     b.HasKey("Id");
 
                     b.HasIndex("NamesCriteriaOfDimensionsId");
 
-                    b.HasIndex("typesDimensionsId");
+                    b.HasIndex("UnionCategoryAndTypeHumanId");
 
                     b.ToTable("UnionNamesCriteriaOfDimensions");
                 });
 
-            modelBuilder.Entity("ClothingStore.DAL.Entities.Types", b =>
+            modelBuilder.Entity("ClothingStore.DAL.Entities.Products", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int?>("cardId")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("colorId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("howMany")
+                        .HasColumnType("int");
+
+                    b.Property<int>("howManyPictures")
+                        .HasColumnType("int");
+
+                    b.Property<bool>("isDeleted")
+                        .HasColumnType("bit");
+
+                    b.Property<int?>("sizeId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("cardId");
+
+                    b.HasIndex("colorId");
+
+                    b.HasIndex("sizeId");
+
+                    b.ToTable("Products");
+                });
+
+            modelBuilder.Entity("ClothingStore.DAL.Entities.Subcategory", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int?>("CategoryId")
+                        .HasColumnType("int");
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -287,9 +429,16 @@ namespace ClothingStore.DAL.Migrations
                     b.Property<bool>("isDeleted")
                         .HasColumnType("bit");
 
+                    b.Property<int?>("unionCategoryAndTypeHumanId")
+                        .HasColumnType("int");
+
                     b.HasKey("Id");
 
-                    b.ToTable("Types");
+                    b.HasIndex("CategoryId");
+
+                    b.HasIndex("unionCategoryAndTypeHumanId");
+
+                    b.ToTable("Subcategories");
                 });
 
             modelBuilder.Entity("ClothingStore.DAL.Entities.TypesHuman", b =>
@@ -310,6 +459,30 @@ namespace ClothingStore.DAL.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("TypesHumans");
+                });
+
+            modelBuilder.Entity("ClothingStore.DAL.Entities.Cards", b =>
+                {
+                    b.HasOne("ClothingStore.DAL.Entities.Brands", "Brand")
+                        .WithMany("Cards")
+                        .HasForeignKey("brandId")
+                        .OnDelete(DeleteBehavior.SetNull);
+
+                    b.HasOne("ClothingStore.DAL.Entities.Collections", "Collections")
+                        .WithMany("Cards")
+                        .HasForeignKey("collectionId")
+                        .OnDelete(DeleteBehavior.SetNull);
+
+                    b.HasOne("ClothingStore.DAL.Entities.Subcategory", "Subcategory")
+                        .WithMany("Cards")
+                        .HasForeignKey("subcategoryId")
+                        .OnDelete(DeleteBehavior.SetNull);
+
+                    b.Navigation("Brand");
+
+                    b.Navigation("Collections");
+
+                    b.Navigation("Subcategory");
                 });
 
             modelBuilder.Entity("ClothingStore.DAL.Entities.Dimensions.CriteriaOfDimensions", b =>
@@ -353,19 +526,19 @@ namespace ClothingStore.DAL.Migrations
                     b.Navigation("namesDimensions");
                 });
 
-            modelBuilder.Entity("ClothingStore.DAL.Entities.Dimensions.TypesDimensions", b =>
+            modelBuilder.Entity("ClothingStore.DAL.Entities.Dimensions.UnionCategoryAndTypeHuman", b =>
                 {
+                    b.HasOne("ClothingStore.DAL.Entities.Category", "category")
+                        .WithMany("TypesDimensions")
+                        .HasForeignKey("categoryId")
+                        .OnDelete(DeleteBehavior.SetNull);
+
                     b.HasOne("ClothingStore.DAL.Entities.TypesHuman", "typeHuman")
                         .WithMany("TypesDimensions")
                         .HasForeignKey("typeHumanId")
                         .OnDelete(DeleteBehavior.SetNull);
 
-                    b.HasOne("ClothingStore.DAL.Entities.Types", "type")
-                        .WithMany("TypesDimensions")
-                        .HasForeignKey("typeId")
-                        .OnDelete(DeleteBehavior.SetNull);
-
-                    b.Navigation("type");
+                    b.Navigation("category");
 
                     b.Navigation("typeHuman");
                 });
@@ -377,14 +550,14 @@ namespace ClothingStore.DAL.Migrations
                         .HasForeignKey("NamesDimensionsId")
                         .OnDelete(DeleteBehavior.SetNull);
 
-                    b.HasOne("ClothingStore.DAL.Entities.Dimensions.TypesDimensions", "typeDimensions")
+                    b.HasOne("ClothingStore.DAL.Entities.Dimensions.UnionCategoryAndTypeHuman", "unionCategoryAndTypeHuman")
                         .WithMany("namesDimensions")
-                        .HasForeignKey("typeDimensionsId")
+                        .HasForeignKey("UnionCategoryAndTypeHumanId")
                         .OnDelete(DeleteBehavior.SetNull);
 
                     b.Navigation("NamesDimensions");
 
-                    b.Navigation("typeDimensions");
+                    b.Navigation("unionCategoryAndTypeHuman");
                 });
 
             modelBuilder.Entity("ClothingStore.DAL.Entities.Dimensions.UnionNamesCriteriaOfDimensions", b =>
@@ -394,14 +567,73 @@ namespace ClothingStore.DAL.Migrations
                         .HasForeignKey("NamesCriteriaOfDimensionsId")
                         .OnDelete(DeleteBehavior.SetNull);
 
-                    b.HasOne("ClothingStore.DAL.Entities.Dimensions.TypesDimensions", "typesDimensions")
+                    b.HasOne("ClothingStore.DAL.Entities.Dimensions.UnionCategoryAndTypeHuman", "unionCategoryAndTypeHuman")
                         .WithMany("namesCriteria")
-                        .HasForeignKey("typesDimensionsId")
+                        .HasForeignKey("UnionCategoryAndTypeHumanId")
                         .OnDelete(DeleteBehavior.SetNull);
 
                     b.Navigation("NamesCriteriaOfDimensions");
 
-                    b.Navigation("typesDimensions");
+                    b.Navigation("unionCategoryAndTypeHuman");
+                });
+
+            modelBuilder.Entity("ClothingStore.DAL.Entities.Products", b =>
+                {
+                    b.HasOne("ClothingStore.DAL.Entities.Cards", "Card")
+                        .WithMany()
+                        .HasForeignKey("cardId");
+
+                    b.HasOne("ClothingStore.DAL.Entities.Colors", "Colors")
+                        .WithMany("Products")
+                        .HasForeignKey("colorId")
+                        .OnDelete(DeleteBehavior.SetNull);
+
+                    b.HasOne("ClothingStore.DAL.Entities.Dimensions.Sizes", "Sizes")
+                        .WithMany("Products")
+                        .HasForeignKey("sizeId")
+                        .OnDelete(DeleteBehavior.SetNull);
+
+                    b.Navigation("Card");
+
+                    b.Navigation("Colors");
+
+                    b.Navigation("Sizes");
+                });
+
+            modelBuilder.Entity("ClothingStore.DAL.Entities.Subcategory", b =>
+                {
+                    b.HasOne("ClothingStore.DAL.Entities.Category", null)
+                        .WithMany("Subcategory")
+                        .HasForeignKey("CategoryId");
+
+                    b.HasOne("ClothingStore.DAL.Entities.Dimensions.UnionCategoryAndTypeHuman", "unionCategoryAndTypeHuman")
+                        .WithMany("subcategories")
+                        .HasForeignKey("unionCategoryAndTypeHumanId")
+                        .OnDelete(DeleteBehavior.SetNull);
+
+                    b.Navigation("unionCategoryAndTypeHuman");
+                });
+
+            modelBuilder.Entity("ClothingStore.DAL.Entities.Brands", b =>
+                {
+                    b.Navigation("Cards");
+                });
+
+            modelBuilder.Entity("ClothingStore.DAL.Entities.Category", b =>
+                {
+                    b.Navigation("Subcategory");
+
+                    b.Navigation("TypesDimensions");
+                });
+
+            modelBuilder.Entity("ClothingStore.DAL.Entities.Collections", b =>
+                {
+                    b.Navigation("Cards");
+                });
+
+            modelBuilder.Entity("ClothingStore.DAL.Entities.Colors", b =>
+                {
+                    b.Navigation("Products");
                 });
 
             modelBuilder.Entity("ClothingStore.DAL.Entities.Dimensions.CriteriaOfDimensions", b =>
@@ -422,13 +654,17 @@ namespace ClothingStore.DAL.Migrations
             modelBuilder.Entity("ClothingStore.DAL.Entities.Dimensions.Sizes", b =>
                 {
                     b.Navigation("Dimensions");
+
+                    b.Navigation("Products");
                 });
 
-            modelBuilder.Entity("ClothingStore.DAL.Entities.Dimensions.TypesDimensions", b =>
+            modelBuilder.Entity("ClothingStore.DAL.Entities.Dimensions.UnionCategoryAndTypeHuman", b =>
                 {
                     b.Navigation("namesCriteria");
 
                     b.Navigation("namesDimensions");
+
+                    b.Navigation("subcategories");
                 });
 
             modelBuilder.Entity("ClothingStore.DAL.Entities.Dimensions.UnionNamesAndDimensions", b =>
@@ -443,9 +679,9 @@ namespace ClothingStore.DAL.Migrations
                     b.Navigation("criteriaOfDimensions");
                 });
 
-            modelBuilder.Entity("ClothingStore.DAL.Entities.Types", b =>
+            modelBuilder.Entity("ClothingStore.DAL.Entities.Subcategory", b =>
                 {
-                    b.Navigation("TypesDimensions");
+                    b.Navigation("Cards");
                 });
 
             modelBuilder.Entity("ClothingStore.DAL.Entities.TypesHuman", b =>

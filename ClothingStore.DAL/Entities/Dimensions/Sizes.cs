@@ -12,5 +12,7 @@ namespace ClothingStore.DAL.Entities.Dimensions
         public int? namesDimensionsId { get; set; } = null;
 
         public IEnumerable<Dimensions>? Dimensions { get; set; }
+
+        public IEnumerable<Products>? Products { get; set; }
     }
 }

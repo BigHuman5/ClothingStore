@@ -5,7 +5,7 @@
 namespace ClothingStore.DAL.Migrations
 {
     /// <inheritdoc />
-    public partial class BaseDimensions : Migration
+    public partial class BaseDimensionsProducts : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -17,11 +17,42 @@ namespace ClothingStore.DAL.Migrations
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Name = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
+                    fakePopularity = table.Column<int>(type: "int", nullable: false),
+                    realPopulatiry = table.Column<int>(type: "int", nullable: false),
                     isDeleted = table.Column<bool>(type: "bit", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Brands", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Category",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    isDeleted = table.Column<bool>(type: "bit", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Category", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Collections",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    isActual = table.Column<bool>(type: "bit", nullable: false),
+                    isDeleted = table.Column<bool>(type: "bit", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Collections", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -68,20 +99,6 @@ namespace ClothingStore.DAL.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Types",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    isDeleted = table.Column<bool>(type: "bit", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Types", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "TypesHumans",
                 columns: table => new
                 {
@@ -96,28 +113,55 @@ namespace ClothingStore.DAL.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "TypesDimensions",
+                name: "UnionCategoryAndTypeHuman",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    typeId = table.Column<int>(type: "int", nullable: true),
+                    categoryId = table.Column<int>(type: "int", nullable: true),
                     typeHumanId = table.Column<int>(type: "int", nullable: true),
                     isDeleted = table.Column<bool>(type: "bit", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_TypesDimensions", x => x.Id);
+                    table.PrimaryKey("PK_UnionCategoryAndTypeHuman", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_TypesDimensions_TypesHumans_typeHumanId",
+                        name: "FK_UnionCategoryAndTypeHuman_Category_categoryId",
+                        column: x => x.categoryId,
+                        principalTable: "Category",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.SetNull);
+                    table.ForeignKey(
+                        name: "FK_UnionCategoryAndTypeHuman_TypesHumans_typeHumanId",
                         column: x => x.typeHumanId,
                         principalTable: "TypesHumans",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.SetNull);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Subcategories",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    unionCategoryAndTypeHumanId = table.Column<int>(type: "int", nullable: true),
+                    CategoryId = table.Column<int>(type: "int", nullable: true),
+                    isDeleted = table.Column<bool>(type: "bit", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Subcategories", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_TypesDimensions_Types_typeId",
-                        column: x => x.typeId,
-                        principalTable: "Types",
+                        name: "FK_Subcategories_Category_CategoryId",
+                        column: x => x.CategoryId,
+                        principalTable: "Category",
+                        principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "FK_Subcategories_UnionCategoryAndTypeHuman_unionCategoryAndTypeHumanId",
+                        column: x => x.unionCategoryAndTypeHumanId,
+                        principalTable: "UnionCategoryAndTypeHuman",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.SetNull);
                 });
@@ -129,7 +173,7 @@ namespace ClothingStore.DAL.Migrations
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     NamesDimensionsId = table.Column<int>(type: "int", nullable: true),
-                    typeDimensionsId = table.Column<int>(type: "int", nullable: true),
+                    UnionCategoryAndTypeHumanId = table.Column<int>(type: "int", nullable: true),
                     isDeleted = table.Column<bool>(type: "bit", nullable: false)
                 },
                 constraints: table =>
@@ -142,9 +186,9 @@ namespace ClothingStore.DAL.Migrations
                         principalColumn: "Id",
                         onDelete: ReferentialAction.SetNull);
                     table.ForeignKey(
-                        name: "FK_UnionNamesAndDimensions_TypesDimensions_typeDimensionsId",
-                        column: x => x.typeDimensionsId,
-                        principalTable: "TypesDimensions",
+                        name: "FK_UnionNamesAndDimensions_UnionCategoryAndTypeHuman_UnionCategoryAndTypeHumanId",
+                        column: x => x.UnionCategoryAndTypeHumanId,
+                        principalTable: "UnionCategoryAndTypeHuman",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.SetNull);
                 });
@@ -156,7 +200,7 @@ namespace ClothingStore.DAL.Migrations
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     NamesCriteriaOfDimensionsId = table.Column<int>(type: "int", nullable: true),
-                    typesDimensionsId = table.Column<int>(type: "int", nullable: true),
+                    UnionCategoryAndTypeHumanId = table.Column<int>(type: "int", nullable: true),
                     isDeleted = table.Column<bool>(type: "bit", nullable: false)
                 },
                 constraints: table =>
@@ -169,9 +213,49 @@ namespace ClothingStore.DAL.Migrations
                         principalColumn: "Id",
                         onDelete: ReferentialAction.SetNull);
                     table.ForeignKey(
-                        name: "FK_UnionNamesCriteriaOfDimensions_TypesDimensions_typesDimensionsId",
-                        column: x => x.typesDimensionsId,
-                        principalTable: "TypesDimensions",
+                        name: "FK_UnionNamesCriteriaOfDimensions_UnionCategoryAndTypeHuman_UnionCategoryAndTypeHumanId",
+                        column: x => x.UnionCategoryAndTypeHumanId,
+                        principalTable: "UnionCategoryAndTypeHuman",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.SetNull);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Cards",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    brandId = table.Column<int>(type: "int", nullable: true),
+                    subcategoryId = table.Column<int>(type: "int", nullable: true),
+                    Price = table.Column<float>(type: "real", nullable: false),
+                    collectionId = table.Column<int>(type: "int", nullable: true),
+                    About = table.Column<string>(type: "nvarchar(500)", maxLength: 500, nullable: false),
+                    Addition = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    fakePopularity = table.Column<int>(type: "int", nullable: false),
+                    realPopulatiry = table.Column<int>(type: "int", nullable: false),
+                    isDeleted = table.Column<bool>(type: "bit", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Cards", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Cards_Brands_brandId",
+                        column: x => x.brandId,
+                        principalTable: "Brands",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.SetNull);
+                    table.ForeignKey(
+                        name: "FK_Cards_Collections_collectionId",
+                        column: x => x.collectionId,
+                        principalTable: "Collections",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.SetNull);
+                    table.ForeignKey(
+                        name: "FK_Cards_Subcategories_subcategoryId",
+                        column: x => x.subcategoryId,
+                        principalTable: "Subcategories",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.SetNull);
                 });
@@ -220,6 +304,41 @@ namespace ClothingStore.DAL.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Products",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    cardId = table.Column<int>(type: "int", nullable: true),
+                    colorId = table.Column<int>(type: "int", nullable: true),
+                    sizeId = table.Column<int>(type: "int", nullable: true),
+                    howMany = table.Column<int>(type: "int", nullable: false),
+                    howManyPictures = table.Column<int>(type: "int", nullable: false),
+                    isDeleted = table.Column<bool>(type: "bit", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Products", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Products_Cards_cardId",
+                        column: x => x.cardId,
+                        principalTable: "Cards",
+                        principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "FK_Products_Colors_colorId",
+                        column: x => x.colorId,
+                        principalTable: "Colors",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.SetNull);
+                    table.ForeignKey(
+                        name: "FK_Products_Sizes_sizeId",
+                        column: x => x.sizeId,
+                        principalTable: "Sizes",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.SetNull);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Dimensions",
                 columns: table => new
                 {
@@ -253,6 +372,21 @@ namespace ClothingStore.DAL.Migrations
                 });
 
             migrationBuilder.CreateIndex(
+                name: "IX_Cards_brandId",
+                table: "Cards",
+                column: "brandId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Cards_collectionId",
+                table: "Cards",
+                column: "collectionId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Cards_subcategoryId",
+                table: "Cards",
+                column: "subcategoryId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_CriteriaOfDimensions_namesCriteriaOfDimensionsId",
                 table: "CriteriaOfDimensions",
                 column: "namesCriteriaOfDimensionsId");
@@ -273,19 +407,44 @@ namespace ClothingStore.DAL.Migrations
                 column: "UnionNamesAndDimensionsId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_Products_cardId",
+                table: "Products",
+                column: "cardId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Products_colorId",
+                table: "Products",
+                column: "colorId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Products_sizeId",
+                table: "Products",
+                column: "sizeId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Sizes_namesDimensionsId",
                 table: "Sizes",
                 column: "namesDimensionsId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_TypesDimensions_typeHumanId",
-                table: "TypesDimensions",
-                column: "typeHumanId");
+                name: "IX_Subcategories_CategoryId",
+                table: "Subcategories",
+                column: "CategoryId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_TypesDimensions_typeId",
-                table: "TypesDimensions",
-                column: "typeId");
+                name: "IX_Subcategories_unionCategoryAndTypeHumanId",
+                table: "Subcategories",
+                column: "unionCategoryAndTypeHumanId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_UnionCategoryAndTypeHuman_categoryId",
+                table: "UnionCategoryAndTypeHuman",
+                column: "categoryId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_UnionCategoryAndTypeHuman_typeHumanId",
+                table: "UnionCategoryAndTypeHuman",
+                column: "typeHumanId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_UnionNamesAndDimensions_NamesDimensionsId",
@@ -293,9 +452,9 @@ namespace ClothingStore.DAL.Migrations
                 column: "NamesDimensionsId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_UnionNamesAndDimensions_typeDimensionsId",
+                name: "IX_UnionNamesAndDimensions_UnionCategoryAndTypeHumanId",
                 table: "UnionNamesAndDimensions",
-                column: "typeDimensionsId");
+                column: "UnionCategoryAndTypeHumanId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_UnionNamesCriteriaOfDimensions_NamesCriteriaOfDimensionsId",
@@ -303,31 +462,43 @@ namespace ClothingStore.DAL.Migrations
                 column: "NamesCriteriaOfDimensionsId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_UnionNamesCriteriaOfDimensions_typesDimensionsId",
+                name: "IX_UnionNamesCriteriaOfDimensions_UnionCategoryAndTypeHumanId",
                 table: "UnionNamesCriteriaOfDimensions",
-                column: "typesDimensionsId");
+                column: "UnionCategoryAndTypeHumanId");
         }
 
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "Brands");
-
-            migrationBuilder.DropTable(
-                name: "Colors");
-
-            migrationBuilder.DropTable(
                 name: "Dimensions");
 
             migrationBuilder.DropTable(
+                name: "Products");
+
+            migrationBuilder.DropTable(
                 name: "CriteriaOfDimensions");
+
+            migrationBuilder.DropTable(
+                name: "Cards");
+
+            migrationBuilder.DropTable(
+                name: "Colors");
 
             migrationBuilder.DropTable(
                 name: "Sizes");
 
             migrationBuilder.DropTable(
                 name: "UnionNamesCriteriaOfDimensions");
+
+            migrationBuilder.DropTable(
+                name: "Brands");
+
+            migrationBuilder.DropTable(
+                name: "Collections");
+
+            migrationBuilder.DropTable(
+                name: "Subcategories");
 
             migrationBuilder.DropTable(
                 name: "UnionNamesAndDimensions");
@@ -339,13 +510,13 @@ namespace ClothingStore.DAL.Migrations
                 name: "NamesDimensions");
 
             migrationBuilder.DropTable(
-                name: "TypesDimensions");
+                name: "UnionCategoryAndTypeHuman");
+
+            migrationBuilder.DropTable(
+                name: "Category");
 
             migrationBuilder.DropTable(
                 name: "TypesHumans");
-
-            migrationBuilder.DropTable(
-                name: "Types");
         }
     }
 }

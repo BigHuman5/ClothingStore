@@ -11,8 +11,8 @@ namespace ClothingStore.DAL.Entities.Dimensions
         public NamesCriteriaOfDimensions? NamesCriteriaOfDimensions { get; set; }
         public int? NamesCriteriaOfDimensionsId { get; set; }
 
-        public TypesDimensions? typesDimensions { get; set; }
-        public int? typesDimensionsId { get; set; }
+        public UnionCategoryAndTypeHuman? unionCategoryAndTypeHuman { get; set; }
+        public int? UnionCategoryAndTypeHumanId { get; set; }
 
         public IEnumerable<CriteriaOfDimensions>? criteriaOfDimensions { get; set; }
 
