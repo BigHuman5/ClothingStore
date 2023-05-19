@@ -1,4 +1,8 @@
+using ClothingStore.BLL.Interfaces;
+using ClothingStore.BLL.Services;
 using ClothingStore.DAL.EF;
+using ClothingStore.DAL.Interfaces;
+using ClothingStore.DAL.Repositories;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -9,7 +13,11 @@ var connectionString = builder.Configuration.GetConnectionString("DefaultConnect
 builder.Services.AddDbContext<ClothingStoreDbContext>(options =>
     options.UseSqlServer(connectionString));
 
-// Add services to the container.
+
+
+builder.Services
+    .AddTransient<IUnitOfWork, EFUnitOfWork>()
+    .AddTransient<IBrandsServices, BrandServices>();
 
 builder.Services.AddControllers();
 
