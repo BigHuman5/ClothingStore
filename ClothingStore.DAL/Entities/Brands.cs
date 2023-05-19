@@ -15,7 +15,7 @@ namespace ClothingStore.DAL.Entities
 
         public int fakePopularity { get; set; } = 0;
 
-        public int realPopulatiry { get; set; } = 0;
+        public int realPopularity { get; set; } = 0;
 
         public IEnumerable<Cards>? Cards { get; set; }
 

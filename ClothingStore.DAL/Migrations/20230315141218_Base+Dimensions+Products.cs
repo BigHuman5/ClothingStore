@@ -18,7 +18,7 @@ namespace ClothingStore.DAL.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Name = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
                     fakePopularity = table.Column<int>(type: "int", nullable: false),
-                    realPopulatiry = table.Column<int>(type: "int", nullable: false),
+                    realPopularity = table.Column<int>(type: "int", nullable: false),
                     isDeleted = table.Column<bool>(type: "bit", nullable: false)
                 },
                 constraints: table =>
@@ -234,7 +234,7 @@ namespace ClothingStore.DAL.Migrations
                     About = table.Column<string>(type: "nvarchar(500)", maxLength: 500, nullable: false),
                     Addition = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     fakePopularity = table.Column<int>(type: "int", nullable: false),
-                    realPopulatiry = table.Column<int>(type: "int", nullable: false),
+                    realPopularity = table.Column<int>(type: "int", nullable: false),
                     isDeleted = table.Column<bool>(type: "bit", nullable: false)
                 },
                 constraints: table =>

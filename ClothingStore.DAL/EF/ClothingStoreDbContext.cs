@@ -30,7 +30,7 @@ namespace ClothingStore.DAL.EF
         public DbSet<Collections> Collections { get; set; }
         public ClothingStoreDbContext(DbContextOptions options) : base(options)
         {
-            //new DbInitializer(this);
+            new DbInitializer(this);
         }
 
         protected override void OnModelCreating(ModelBuilder builder)

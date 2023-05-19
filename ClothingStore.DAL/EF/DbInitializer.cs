@@ -50,13 +50,18 @@ namespace ClothingStore.DAL.EF
             {
                 new Brands {
                     Name="Название брэнда #1"
+                    
                 },
                 new Brands {
                     Name="Название брэнда #2",
+                    fakePopularity=100,
+                    realPopularity=1001,
                     isDeleted=false,
                 },
                 new Brands {
                     Name="Название брэнда #3",
+                    fakePopularity=10,
+                    realPopularity=15,
                     isDeleted=false,
                 },
                 new Brands {
@@ -227,7 +232,7 @@ namespace ClothingStore.DAL.EF
                     About="fdff",
                     fakePopularity=1,
                     Price=100.5f,
-                    realPopulatiry=2,
+                    realPopularity=2,
                 },
            };
 
